@@ -36,7 +36,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Jersey Web Application</servlet-name>
-        <url-pattern>/crunchify/*</url-pattern>
+        <url-pattern>/pruebas/*</url-pattern>
     </servlet-mapping>
     
    
