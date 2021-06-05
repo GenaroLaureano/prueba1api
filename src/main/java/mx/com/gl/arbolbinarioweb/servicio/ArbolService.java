@@ -25,16 +25,6 @@ import org.json.JSONObject;
 @Path("/v1/b-trees")
 public class ArbolService {
     
-    @GET  
-    @Path("/ver")
-    public Response sayHello() {     
-          Arbol arbol = new Arbol();
-          int[] ver = {1,2,3,4,5};
-        Arbol arbolCreado = arbol.crearArbol(ver);
-        int valor = arbol.profundidad(arbolCreado.getPrincipal());
-        System.out.println(valor);
-        return Response.ok("Hello World desde el API",MediaType.APPLICATION_JSON).build();   
-    } 
     
     @POST
     @Path("/height")
@@ -43,6 +33,7 @@ public class ArbolService {
     public Response obtenerProfundidad(String str) throws JSONException {
         JSONObject objeto = new JSONObject(str);
         JSONArray arregloObjeto = objeto.getJSONArray("toTree");
+        
         int[] a = new int[arregloObjeto.length()];
         for(int i=0; i< arregloObjeto.length(); i++){
             a[i] = arregloObjeto.getInt(i);
@@ -72,12 +63,31 @@ public class ArbolService {
         Arbol arbol = new Arbol();
         Arbol arbolCreado = arbol.crearArbol(a);
         List<Integer> vecinos = arbolCreado.obtenerVecinos(valor);
-        for(Integer v: vecinos){
-            System.out.println(v);
-        }
         
         JSONObject objetoRespuesta = new JSONObject();
         objetoRespuesta.put("neighbors", vecinos);
+        String respuesta = objetoRespuesta.toString();
+        return Response.ok(respuesta).build();
+        
+    }
+    
+    @POST
+    @Path("/bfs")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response bfs(String str) throws JSONException{
+        JSONObject objeto = new JSONObject(str);
+        JSONArray arregloObjeto = objeto.getJSONArray("toTree");
+        int[] a = new int[arregloObjeto.length()];
+        for(int i=0; i< arregloObjeto.length(); i++){
+            a[i] = arregloObjeto.getInt(i);
+        }
+        Arbol arbol = new Arbol();
+        Arbol arbolCreado = arbol.crearArbol(a);
+        List<Integer> nodos = arbolCreado.recorridoPorAmplitud(arbolCreado.getPrincipal());
+        
+        JSONObject objetoRespuesta = new JSONObject();
+        objetoRespuesta.put("bfs", nodos);
         String respuesta = objetoRespuesta.toString();
         return Response.ok(respuesta).build();
         
