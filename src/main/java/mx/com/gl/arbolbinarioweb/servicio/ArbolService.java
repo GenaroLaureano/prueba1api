@@ -5,6 +5,7 @@
  */
 package mx.com.gl.arbolbinarioweb.servicio;
 
+import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -39,7 +40,7 @@ public class ArbolService {
     @Path("/height")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createUser(String str) throws JSONException {
+    public Response obtenerProfundidad(String str) throws JSONException {
         JSONObject objeto = new JSONObject(str);
         JSONArray arregloObjeto = objeto.getJSONArray("toTree");
         int[] a = new int[arregloObjeto.length()];
@@ -54,6 +55,32 @@ public class ArbolService {
         objetoRespuesta.put("height", valor);
         String profundidad = objetoRespuesta.toString();
         return Response.ok(profundidad).build();
+    }
+    
+    @POST
+    @Path("/neighbors")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response obtenerVecinos(String str) throws JSONException{
+        JSONObject objeto = new JSONObject(str);
+        JSONArray arregloObjeto = objeto.getJSONArray("toTree");
+        int valor = objeto.getInt("node");
+        int[] a = new int[arregloObjeto.length()];
+        for(int i=0; i< arregloObjeto.length(); i++){
+            a[i] = arregloObjeto.getInt(i);
+        }
+        Arbol arbol = new Arbol();
+        Arbol arbolCreado = arbol.crearArbol(a);
+        List<Integer> vecinos = arbolCreado.obtenerVecinos(valor);
+        for(Integer v: vecinos){
+            System.out.println(v);
+        }
+        
+        JSONObject objetoRespuesta = new JSONObject();
+        objetoRespuesta.put("neighbors", vecinos);
+        String respuesta = objetoRespuesta.toString();
+        return Response.ok(respuesta).build();
+        
     }
     
 }
